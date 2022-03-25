@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Login with mongodb flask</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                {%if username is defined %}
+                <li role="presentation"> Logged in as {{username}}</li>
+                {% else %}
+                <li role="presentation" class="active"><a href="#">Home</a>
+                </li>
+                <li role="presentation"><a href="/auth">Sign In</a>
+                </li>
+                <li role="presentation"><a href="/signup">Sign Up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        <h3 class="text-muted">Login with mongodb flask</h3>
+    </div>
+
+
+</div>
+</body>
+
+</html>

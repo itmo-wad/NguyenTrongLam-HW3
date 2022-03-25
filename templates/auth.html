@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Authentication</title>
+
+  <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+  <link href="../static/signup.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+  <div class="header">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation" ><a href="/index">Home</a></li>
+        <li role="presentation" class="active"><a href="/auth">Sign In</a></li>
+        <li role="presentation"><a href="/signup">Sign Up</a></li>
+      </ul>
+    </nav>
+    <h3 class="text-muted">Authentication</h3>
+  </div>
+
+  <div class="jumbotron">
+    <h1>Sign in</h1>
+    {% if error %}
+        <p style="color: red;">{{ message }}</p>
+    {% else %}
+        <p style="color: green;">{{ message }}</p>
+    {% endif %}
+    <form class="form-signin" action="/auth" method="post">
+      <label for="inputName" class="sr-only">Username</label>
+      <input type="name" name="username" id="inputName" class="form-control" placeholder="Username" required autofocus>
+      <label for="inputEmail" class="sr-only">Password</label>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <button id="btnSignIn" class="btn btn-lg btn-primary btn-block" onclick = 'this.form.submit();' type="button">Sign in</button>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2022</p>
+  </footer>
+
+</div>
+</body>
+</html>
