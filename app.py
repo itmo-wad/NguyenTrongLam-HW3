@@ -5,18 +5,19 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)   
 app.config['SECRET_KEY'] = 'testing'
 
-app.config['MONGO_dbname'] = 'users'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/users'
-
+app.config['MONGO_dbname'] = 'demo'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/demo'
 
 mongo = PyMongo(app)
 
+cache = {}
 
 @app.route("/")
 @app.route("/main")
-
 def main():
-    return render_template('index.html')
+    if cache.get('user'):
+        return render_template('index.html', error=cache.get('need_to_login'), username=cache.get('user').get('username'))
+    return render_template('index.html', error=cache.get('need_to_login'))
 
 
 @app.route("/signup", methods=['POST', 'GET'])
@@ -43,6 +44,7 @@ def signup():
 
     return render_template('signup.html')
 
+
 @app.route("/auth", methods=['POST', 'GET'])
 def auth():
     if request.method == 'POST':
@@ -58,8 +60,10 @@ def auth():
                 error = True
             else:
                 message = 'Login successfully'
+                cache['user'] = user
+                cache['need_to_login'] = False
                 error = False
-                return redirect('profile')
+                return redirect('post')
         else:
             message = 'User not found'
             error = True
@@ -69,9 +73,40 @@ def auth():
     return render_template('auth.html')
 
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    cache['user'] = None
+    return redirect(url_for('index'))
+
+
+@app.route('/create-post', methods=['POST', 'GET'])
+def create_post():
+    if request.method == 'POST':
+        if cache.get('user'):
+            cache['title'] = request.form.get('title', '')
+            cache['content'] = request.form.get('content', '')
+            return redirect('post')
+
+        cache['need_to_login'] = True
+        return redirect(url_for('main'))
+    return render_template("create-post.html")
+
+
 @app.route("/profile")
 def profile():
     return render_template("/profile.html")
+
+
+@app.route("/post", methods=['GET'])
+def blog():
+    if not cache.get('user'):
+        cache['need_to_login'] = True
+    elif cache.get('title') and cache.get('content'):
+        return render_template("/post.html", title=cache['title'], content=cache['content'])
+    else:
+        return redirect(url_for("create_post"))
+    return redirect(url_for('main'))
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
